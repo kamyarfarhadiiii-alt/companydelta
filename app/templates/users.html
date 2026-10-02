@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}کاربران{% endblock %}
+{% block heading %}مدیریت کاربران{% endblock %}
+{% block content %}
+{% if msg %}<div class="note ok">{{ msg }}</div>{% endif %}
+{% if err %}<div class="note bad">{{ err }}</div>{% endif %}
+<section class="glass pad">
+  <div class="row"><h2>کاربران ({{ users|length }})</h2><button class="btn" onclick="openModal()">+ کاربر جدید</button></div>
+  <div class="scroll"><table class="tbl">
+    <tr><th>نام</th><th>نام کاربری</th><th>نقش</th><th>وضعیت</th><th></th></tr>
+    {% for u in users %}
+    <tr>
+      <td>{{ u.full_name }}</td><td dir="ltr">{{ u.username }}</td>
+      <td>{{ {'admin':'مدیر','secretary':'منشی','employee':'کارمند'}[u.role.value] }}</td>
+      <td><span class="pill {{ 'g' if u.is_active else 'r' }}">{{ 'فعال' if u.is_active else 'غیرفعال' }}</span></td>
+      <td><button class="btn sm" data-id="{{ u.id }}" data-f="{{ u.first_name }}" data-l="{{ u.last_name }}"
+           data-u="{{ u.username }}" data-r="{{ u.role.value }}" data-a="{{ 1 if u.is_active else 0 }}" onclick="openModal(this)">ویرایش</button></td>
+    </tr>
+    {% endfor %}
+  </table></div>
+</section>
+
+<div class="modal" id="modal"><form class="glass pad" method="post" id="uform">
+  <h2 id="mtitle">کاربر جدید</h2>
+  <label class="fl">نام<input name="first_name" id="f" required maxlength="100"></label>
+  <label class="fl">نام خانوادگی<input name="last_name" id="l" required maxlength="100"></label>
+  <label class="fl" id="ubox">نام کاربری (انگلیسی)<input name="username" id="u" dir="ltr" maxlength="50"></label>
+  <label class="fl">نقش<select name="role" id="r">
+    <option value="employee">کارمند</option><option value="secretary">منشی</option><option value="admin">مدیر</option></select></label>
+  <label class="fl" id="abox"><span><input type="checkbox" name="is_active" id="a" checked> حساب فعال باشد</span></label>
+  <label class="fl"><span id="plabel">رمز عبور (حداقل ۸ کاراکتر)</span><input name="password" id="p" type="password" dir="ltr" maxlength="72" autocomplete="new-password"></label>
+  <div class="row"><button class="btn" type="submit">ذخیره</button><button class="btn ghost" type="button" onclick="closeModal()">انصراف</button></div>
+</form></div>
+<script>
+const m=document.getElementById('modal'),$=id=>document.getElementById(id);
+function openModal(b){
+  const edit=!!b, f=$('uform');
+  $('mtitle').textContent=edit?'ویرایش کاربر':'کاربر جدید';
+  f.action=edit?`/users/${b.dataset.id}/update`:'/users/create';
+  $('f').value=edit?b.dataset.f:'';$('l').value=edit?b.dataset.l:'';
+  $('u').value=edit?b.dataset.u:'';$('u').required=!edit;$('ubox').style.display=edit?'none':'';
+  $('r').value=edit?b.dataset.r:'employee';
+  $('abox').style.display=edit?'':'none';$('a').checked=edit?b.dataset.a==='1':true;
+  $('p').value='';$('p').required=!edit;
+  $('plabel').textContent=edit?'رمز جدید (خالی = بدون تغییر)':'رمز عبور (حداقل ۸ کاراکتر)';
+  m.classList.add('open');
+}
+function closeModal(){m.classList.remove('open')}
+m.addEventListener('click',e=>{if(e.target===m)closeModal()});
+</script>
+{% endblock %}

@@ -1,0 +1,70 @@
+body.auth{overflow:hidden}
+/* layout */
+.stage{position:relative;z-index:2;min-height:100vh;display:grid;grid-template-columns:1.15fr 1fr;align-items:center;gap:4vw;padding:4vw 6vw;max-width:1400px;margin:auto}
+.hero,.card{opacity:0;transform:translateY(30px);transition:opacity 1s .3s,transform 1s .3s cubic-bezier(.2,.8,.2,1)}
+.card{transition-delay:.6s}
+body.ready .hero,body.ready .card{opacity:1;transform:none}
+.hero{text-align:center}
+.title{font:800 clamp(2.4rem,5.2vw,4.6rem)/1.3 var(--font);direction:rtl;display:grid;gap:.05em;margin-top:1.5rem}
+.title .pre{font-size:.4em;font-weight:500;color:var(--mut)}
+.grad{background:linear-gradient(100deg,#fff,var(--pink) 35%,var(--blue) 70%,#fff);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sheen 6s linear infinite;filter:drop-shadow(0 0 22px rgba(124,58,237,.6))}
+@keyframes sheen{to{background-position:-250% 0}}
+.sub{margin-top:1.3rem;color:var(--mut);font-size:1.05rem;line-height:1.9;max-width:34ch;margin-inline:auto}
+
+/* 3D scene */
+.scene{position:relative;height:230px;display:grid;place-items:center;perspective:900px}
+.pivot{transform-style:preserve-3d;transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .15s ease-out}
+.cube{position:relative;width:110px;height:110px;transform-style:preserve-3d;animation:cube 16s linear infinite}
+@keyframes cube{to{transform:rotateX(360deg) rotateY(360deg)}}
+.f{position:absolute;inset:0;border:1px solid rgba(192,132,252,.7);background:linear-gradient(135deg,rgba(124,58,237,.22),rgba(56,189,248,.08));box-shadow:inset 0 0 28px rgba(124,58,237,.45),0 0 18px rgba(56,189,248,.18);backdrop-filter:blur(2px)}
+.f1{transform:translateZ(55px)}.f2{transform:rotateY(180deg) translateZ(55px)}
+.f3{transform:rotateY(90deg) translateZ(55px)}.f4{transform:rotateY(-90deg) translateZ(55px)}
+.f5{transform:rotateX(90deg) translateZ(55px)}.f6{transform:rotateX(-90deg) translateZ(55px)}
+.core{position:absolute;left:50%;top:50%;width:34px;height:34px;margin:-17px;border-radius:50%;background:radial-gradient(circle,#fff,var(--blue) 45%,transparent 70%);box-shadow:0 0 40px 12px rgba(56,189,248,.7),0 0 90px 30px rgba(124,58,237,.5);animation:pulse 3s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.35)}}
+.ring{position:absolute;border-radius:50%;border:1px solid rgba(56,189,248,.5);box-shadow:0 0 18px rgba(56,189,248,.25)}
+.r1{width:210px;height:210px;animation:rr 9s linear infinite}
+.r2{width:270px;height:270px;border-color:rgba(192,132,252,.4);animation:rr 14s linear infinite reverse}
+@keyframes rr{from{transform:rotateX(70deg) rotateZ(0)}to{transform:rotateX(70deg) rotateZ(360deg)}}
+
+/* card */
+.card{position:relative;padding:2.4rem 2.2rem;border-radius:26px;background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.02));
+  border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(22px) saturate(140%);-webkit-backdrop-filter:blur(22px) saturate(140%);
+  box-shadow:0 30px 80px rgba(0,0,0,.55),0 0 60px rgba(124,58,237,.18);max-width:430px;width:100%;justify-self:center;overflow:hidden}
+body.ready .card{transform:perspective(900px) rotateX(var(--tx,0deg)) rotateY(var(--ty,0deg))}
+.shine{position:absolute;inset:0;pointer-events:none;background:radial-gradient(360px circle at var(--mx,50%) var(--my,0%),rgba(192,132,252,.22),transparent 60%)}
+.mark{width:52px;height:52px;border-radius:16px;margin-bottom:1.2rem;display:grid;place-items:center;background:linear-gradient(135deg,var(--vio),var(--blue));box-shadow:0 0 30px rgba(124,58,237,.7)}
+.mark i{width:22px;height:20px;animation:pulse 3s ease-in-out infinite}
+.card h2{font-size:1.65rem;font-weight:700}
+.hint{color:var(--mut);margin:.35rem 0 1.6rem;font-size:.95rem}
+.error{background:rgba(251,113,133,.12);border:1px solid rgba(251,113,133,.5);color:#fecdd3;padding:.75rem 1rem;border-radius:12px;margin-bottom:1.2rem;font-size:.92rem}
+.shake{animation:shake .5s}
+@keyframes shake{20%,60%{margin-inline-start:-10px}40%,80%{margin-inline-start:10px}}
+
+.field{position:relative;margin-bottom:1.2rem}
+.field input{width:100%;padding:1.35rem 1rem .55rem;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:14px;color:#fff;font-size:1rem;outline:0;transition:border-color .25s,background .25s,box-shadow .25s}
+.field input:focus{border-color:var(--pink);background:rgba(124,58,237,.1);box-shadow:0 0 0 4px rgba(124,58,237,.2),0 0 26px rgba(124,58,237,.35)}
+.field label{position:absolute;right:1rem;top:1rem;color:var(--mut);pointer-events:none;transition:.22s;font-size:.98rem}
+.field input:focus+label,.field input:not(:placeholder-shown)+label{top:.35rem;font-size:.72rem;color:var(--blue)}
+.eye{position:absolute;left:.7rem;top:.85rem;background:none;border:0;font-size:1.05rem;opacity:.55;color:#fff}
+.eye:hover{opacity:1}
+.go{position:relative;width:100%;padding:1rem;margin-top:.6rem;border:0;border-radius:14px;font-size:1.05rem;font-weight:700;color:#fff;overflow:hidden;
+  background:linear-gradient(100deg,var(--vio),#4f46e5 50%,var(--blue));background-size:200% 100%;box-shadow:0 10px 34px rgba(124,58,237,.55);transition:background-position .5s,transform .25s,box-shadow .25s,border-radius .25s}
+.go::after{content:"";position:absolute;top:0;left:-70%;width:45%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.45),transparent);transform:skewX(-20deg);transition:left .7s}
+.go:hover{background-position:100% 0;transform:translateY(-2px);border-radius:22px;box-shadow:0 14px 44px rgba(56,189,248,.55)}
+.go:hover::after{left:130%}
+.go:active{transform:scale(.98)}
+.go.busy{pointer-events:none;opacity:.85}
+.go.busy span::after{content:"";display:inline-block;width:14px;height:14px;margin-inline-start:10px;border:2px solid #fff;border-top-color:transparent;border-radius:50%;vertical-align:-2px;animation:spin .7s linear infinite}
+.foot{margin-top:1.4rem;text-align:center;font-size:.8rem;color:var(--mut)}
+:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+
+@media(max-width:900px){
+  body.auth{overflow:auto}
+  .stage{grid-template-columns:1fr;padding:6vw 5vw;gap:1rem}
+  .scene{height:170px;transform:scale(.75)}
+  .sub{display:none}
+  .title{font-size:2.2rem;margin-top:.5rem}
+  .card{padding:1.8rem 1.4rem}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition-duration:.01s!important}}

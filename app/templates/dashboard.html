@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}داشبورد{% endblock %}
+{% block content %}
+{% set r = user.role.value %}
+<section class="welcome glass" data-tilt>
+  <h1>سلام <span class="grad">{{ user.first_name }}</span>، خوش آمدید</h1>
+  <p>امروز چه کاری را شروع می‌کنید؟</p>
+  <span class="badge">{{ {'admin':'مدیر','secretary':'منشی','employee':'کارمند'}[r] }}</span>
+</section>
+<section class="stats">
+{% if r == 'admin' %}
+  <div class="stat glass" data-tilt><div class="ic">👥</div><b>{{ stats.staff }}</b><span>تعداد کارکنان</span></div>
+  <div class="stat glass" data-tilt><div class="ic">✅</div><b>{{ stats.present }}</b><span>کارکنان حاضر</span></div>
+  <div class="stat glass" data-tilt><div class="ic">🚫</div><b>{{ stats.absent }}</b><span>کارکنان غایب</span></div>
+  <div class="stat glass" data-tilt><div class="ic">🕘</div><b>{{ stats.entries }}</b><span>ورود و خروج‌های امروز</span></div>
+{% endif %}
+{% if r != 'employee' %}
+  <div class="stat glass" data-tilt><div class="ic">⏳</div><b>{{ stats.pending }}</b><span>فعالیت‌های منتظر تأیید</span></div>
+  <div class="stat glass" data-tilt><div class="ic">👍</div><b>{{ stats.approved }}</b><span>فعالیت‌های تأیید شده</span></div>
+  <div class="stat glass" data-tilt><div class="ic">👎</div><b>{{ stats.rejected }}</b><span>فعالیت‌های رد شده</span></div>
+{% else %}
+  <div class="stat glass" data-tilt><div class="ic">🏢</div><b>{{ 'در شرکت' if stats.mine_in else 'خارج' }}</b><span>وضعیت شما</span></div>
+{% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}اعلان‌ها{% endblock %}
+{% block heading %}اعلان‌ها{% endblock %}
+{% block content %}
+<section class="glass pad"><div class="scroll"><table class="tbl">
+  {% for n in items %}
+  <tr class="{{ 'unread' if n.id in fresh }}"><td>{{ n.message }}{% if n.link %} <a href="{{ n.link }}" style="color:var(--blue)">مشاهده</a>{% endif %}</td>
+    <td>{{ n.created_at|jdate }} {{ n.created_at|jtime }}</td></tr>
+  {% else %}<tr><td class="empty">اعلانی ندارید.</td></tr>{% endfor %}
+</table></div></section>
+{% endblock %}

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}پنل{% endblock %} | شرکت دلتا</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;800&display=swap">
+  <link rel="stylesheet" href="/static/css/theme.css">
+  <link rel="stylesheet" href="/static/css/panel.css">
+</head>
+<body class="loading">
+<div id="loader" aria-hidden="true">
+  <div class="ld-core"><i></i><b id="ldNum">0</b></div>
+  <div class="ld-name">شرکت دلتا</div>
+  <div class="ld-bar"><span id="ldBar"></span></div>
+</div>
+<canvas id="fx"></canvas>
+<div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div>
+<div class="cur-dot"></div><div class="cur-ring"></div>
+
+<div class="app">
+  <aside class="side glass">
+    <div class="brand"><div class="mark"><i></i></div><span>شرکت دلتا</span></div>
+    <nav class="nav">
+      {% set r = user.role.value %}{% set pth = request.url.path %}
+      <a href="/dashboard" class="{{ 'on' if pth == '/dashboard' }}">🏠 داشبورد</a>
+      <a href="/attendance" class="{{ 'on' if pth.startswith('/attendance') }}">🕘 {{ 'حضور و غیاب' if r == 'admin' else 'ثبت ورود و خروج' }}</a>
+      {% if r == 'admin' %}
+        <a href="/users" class="{{ 'on' if pth.startswith('/users') }}">👥 کاربران</a>
+        <a href="/activities" class="{{ 'on' if pth.startswith('/activities') }}">📝 فعالیت‌ها</a>
+        <a href="/reports" class="{{ 'on' if pth.startswith('/reports') }}">📊 گزارش حضور</a>
+      {% elif r == 'secretary' %}
+        <a href="/activities" class="{{ 'on' if pth.startswith('/activities') }}">📝 فعالیت‌های من</a>
+      {% endif %}
+    </nav>
+    <div class="spacer"></div>
+    <form method="post" action="/logout"><button class="logout">خروج از حساب</button></form>
+  </aside>
+
+  <div class="main">
+    <header class="top glass">
+      <button class="burger" id="burger" aria-label="منو">☰</button>
+      <h3>{% block heading %}داشبورد{% endblock %}</h3>
+      <div class="chip">
+        <a href="/notifications" class="bell" aria-label="اعلان‌ها">🔔<i id="nb"></i></a>
+        <div class="who">{{ user.full_name }}<small>{{ {'admin':'مدیر','secretary':'منشی','employee':'کارمند'}[user.role.value] }}</small></div>
+        <div class="av">{{ user.first_name[:1]|upper }}</div>
+      </div>
+    </header>
+    {% block content %}{% endblock %}
+  </div>
+</div>
+<script src="/static/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}فعالیت‌ها{% endblock %}
+{% block heading %}{{ 'فعالیت‌های ثبت‌شده' if user.role.value == 'admin' else 'فعالیت‌های من' }}{% endblock %}
+{% block content %}
+{% if msg %}<div class="note ok">{{ msg }}</div>{% endif %}
+{% if err %}<div class="note bad">{{ err }}</div>{% endif %}
+
+{% if user.role.value == 'secretary' %}
+<section class="glass pad"><h2>ثبت فعالیت جدید</h2>
+  <form method="post" action="/activities/create">
+    <label class="fl">عنوان فعالیت<input name="title" required maxlength="200" placeholder="مثلاً: ثبت فاکتور مشتری"></label>
+    <label class="fl">توضیحات<textarea name="description" maxlength="2000"></textarea></label>
+    <button class="btn">ثبت و ارسال برای مدیر</button>
+  </form>
+</section>
+{% else %}
+<div class="tabs">
+  {% for k,v in [('', 'همه'), ('pending','در انتظار بررسی'), ('approved','تأیید شده'), ('rejected','رد شده')] %}
+  <a href="/activities{{ '?status=' + k if k }}" class="{{ 'on' if status == k }}">{{ v }}</a>{% endfor %}
+</div>
+{% endif %}
+
+<section class="glass pad">
+  <div class="scroll"><table class="tbl">
+    <tr>{% if user.role.value == 'admin' %}<th>ثبت‌کننده</th>{% endif %}<th>عنوان و توضیحات</th><th>تاریخ</th><th>وضعیت</th>{% if user.role.value == 'admin' %}<th></th>{% endif %}</tr>
+    {% for a in items %}
+    <tr>
+      {% if user.role.value == 'admin' %}<td>{{ a.user.full_name }}</td>{% endif %}
+      <td><b>{{ a.title }}</b><br><small style="color:var(--mut)">{{ a.description }}</small>
+        {% if a.admin_comment %}<div class="reason">نظر مدیر: {{ a.admin_comment }}</div>{% endif %}</td>
+      <td>{{ a.created_at|jdate }}<br><small>{{ a.created_at|jtime }}</small></td>
+      <td><span class="pill {{ STATUS_CLS[a.status.value] }}">{{ STATUS_FA[a.status.value] }}</span>
+        {% if a.reviewed_at %}<br><small style="color:var(--mut)">{{ a.reviewed_at|jdate }}</small>{% endif %}</td>
+      {% if user.role.value == 'admin' %}<td>{% if a.status.value == 'pending' %}
+        <form method="post" action="/activities/{{ a.id }}/review" style="display:inline">
+          <input type="hidden" name="decision" value="approved"><button class="btn sm">تأیید</button></form>
+        <button class="btn sm out" onclick="rejectModal({{ a.id }})">رد</button>{% endif %}</td>{% endif %}
+    </tr>
+    {% else %}<tr><td colspan="5" class="empty">موردی وجود ندارد.</td></tr>{% endfor %}
+  </table></div>
+</section>
+
+{% if user.role.value == 'admin' %}
+<div class="modal" id="rm"><form class="glass pad" method="post" id="rf">
+  <h2>رد فعالیت</h2><input type="hidden" name="decision" value="rejected">
+  <label class="fl">دلیل رد (برای منشی نمایش داده می‌شود)<textarea name="comment" required maxlength="500"></textarea></label>
+  <div class="row"><button class="btn out">رد فعالیت</button><button class="btn ghost" type="button" onclick="rm.classList.remove('open')">انصراف</button></div>
+</form></div>
+<script>
+const rm=document.getElementById('rm');
+function rejectModal(id){document.getElementById('rf').action=`/activities/${id}/review`;rm.classList.add('open')}
+rm.addEventListener('click',e=>{if(e.target===rm)rm.classList.remove('open')});
+</script>
+{% endif %}
+{% endblock %}

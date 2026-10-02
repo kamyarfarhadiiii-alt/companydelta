@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ورود | شرکت دلتا</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;800&display=swap">
+  <link rel="stylesheet" href="/static/css/theme.css">
+  <link rel="stylesheet" href="/static/css/login.css">
+</head>
+<body class="loading auth">
+
+<div id="loader" aria-hidden="true">
+  <div class="ld-core"><i></i><b id="ldNum">0</b></div>
+  <div class="ld-name">شرکت دلتا</div>
+  <div class="ld-bar"><span id="ldBar"></span></div>
+</div>
+
+<canvas id="fx"></canvas>
+<div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div>
+<div class="floor"></div>
+<div class="cur-dot"></div><div class="cur-ring"></div>
+
+<main class="stage">
+  <section class="hero">
+    <div class="scene" id="scene">
+      <div class="ring r1"></div><div class="ring r2"></div>
+      <div class="pivot"><div class="cube">
+        <div class="core"></div>
+        <div class="f f1"></div><div class="f f2"></div><div class="f f3"></div>
+        <div class="f f4"></div><div class="f f5"></div><div class="f f6"></div>
+      </div></div>
+    </div>
+    <h1 class="title"><span class="pre">خوش آمدید به</span><span class="grad">شرکت دلتا</span></h1>
+    <p class="sub">سامانه مدیریت داخلی؛ حضور، فعالیت‌ها و تیم شما در یک‌جا.</p>
+  </section>
+
+  <section class="card {% if error %}shake{% endif %}" id="card">
+    <div class="shine"></div>
+    <div class="mark"><i></i></div>
+    <h2>ورود به سیستم</h2>
+    <p class="hint">با حساب کاربری خود وارد شوید.</p>
+    {% if error %}<div class="error" role="alert">{{ error }}</div>{% endif %}
+
+    <form method="post" action="/login" id="form" autocomplete="on">
+      <div class="field">
+        <input id="u" name="username" placeholder=" " required autofocus autocomplete="username" dir="ltr">
+        <label for="u">نام کاربری</label><span class="line"></span>
+      </div>
+      <div class="field">
+        <input id="p" name="password" type="password" placeholder=" " required autocomplete="current-password" dir="ltr">
+        <label for="p">رمز عبور</label><span class="line"></span>
+        <button type="button" class="eye" id="eye" aria-label="نمایش رمز عبور">👁</button>
+      </div>
+      <button class="go" type="submit" id="go"><span>ورود به پنل</span></button>
+    </form>
+    <p class="foot">اتصال امن · رمزها هش‌شده ذخیره می‌شوند</p>
+  </section>
+</main>
+
+<script src="/static/js/login.js"></script>
+</body>
+</html>

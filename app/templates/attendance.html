@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}حضور و غیاب{% endblock %}
+{% block heading %}حضور و غیاب{% endblock %}
+{% block content %}
+{% if err %}<div class="note bad">{{ err }}</div>{% endif %}
+<section class="glass pad clock">
+  {% if current %}
+    <p>ورود شما ساعت <b>{{ current.check_in|jtime }}</b> ({{ current.check_in|jdate }}) ثبت شده است.</p>
+    <form method="post" action="/attendance/check-out"><button class="btn out">ثبت خروج</button></form>
+  {% else %}
+    <p>هنوز ورودی برای امروز ثبت نکرده‌اید.</p>
+    <form method="post" action="/attendance/check-in"><button class="btn">ثبت ورود</button></form>
+  {% endif %}
+</section>
+
+<section class="glass pad">
+  <h2>سابقه من</h2>
+  <div class="scroll"><table class="tbl">
+    <tr><th>تاریخ</th><th>ورود</th><th>خروج</th><th>مدت حضور</th></tr>
+    {% for a in mine %}
+    <tr><td>{{ a.check_in|jdate }}</td><td>{{ a.check_in|jtime }}</td><td>{{ a.check_out|jtime if a.check_out else '—' }}</td><td>{{ duration(a.check_in, a.check_out) }}</td></tr>
+    {% else %}<tr><td colspan="4" class="empty">هنوز سابقه‌ای ثبت نشده است.</td></tr>{% endfor %}
+  </table></div>
+</section>
+
+{% if user.role.value == 'admin' %}
+<section class="glass pad">
+  <h2>ورود و خروج‌های امروز</h2>
+  <div class="scroll"><table class="tbl">
+    <tr><th>کارمند</th><th>ورود</th><th>خروج</th><th>مدت حضور</th></tr>
+    {% for a in today_all %}
+    <tr><td>{{ a.user.full_name }}</td><td>{{ a.check_in|jtime }}</td><td>{{ a.check_out|jtime if a.check_out else 'هنوز در شرکت' }}</td><td>{{ duration(a.check_in, a.check_out) }}</td></tr>
+    {% else %}<tr><td colspan="4" class="empty">امروز هنوز کسی وارد نشده است.</td></tr>{% endfor %}
+  </table></div>
+</section>
+{% endif %}
+{% endblock %}

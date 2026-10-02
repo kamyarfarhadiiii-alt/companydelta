@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}گزارش حضور{% endblock %}
+{% block heading %}گزارش حضور و غیاب{% endblock %}
+{% block content %}
+{% if err %}<div class="note bad">{{ err }}</div>{% endif %}
+<section class="glass pad"><form class="filters" method="get">
+  <label class="fl">کارمند<select name="user_id"><option value="0">همه</option>
+    {% for u in staff %}<option value="{{ u.id }}" {{ 'selected' if u.id == user_id }}>{{ u.full_name }}</option>{% endfor %}</select></label>
+  <label class="fl">از تاریخ<input name="date_from" value="{{ date_from }}" dir="ltr" placeholder="1405/07/01"></label>
+  <label class="fl">تا تاریخ<input name="date_to" value="{{ date_to }}" dir="ltr" placeholder="1405/07/30"></label>
+  <button class="btn">نمایش گزارش</button>
+</form></section>
+<section class="glass pad"><h2>خلاصه</h2><div class="scroll"><table class="tbl">
+  <tr><th>کارمند</th><th>روزهای حضور</th><th>مجموع ساعت حضور</th><th>روزهای غیبت</th></tr>
+  {% for r in rows %}<tr><td>{{ r.user.full_name }}</td><td>{{ r.days }}</td><td>{{ r.time }}</td>
+    <td><span class="pill {{ 'r' if r.absent else 'g' }}">{{ r.absent }}</span></td></tr>
+  {% else %}<tr><td colspan="4" class="empty">داده‌ای نیست.</td></tr>{% endfor %}
+</table></div><small style="color:var(--mut)">جمعه‌ها در محاسبه غیبت حساب نمی‌شوند.</small></section>
+<section class="glass pad"><h2>جزئیات ورود و خروج</h2><div class="scroll"><table class="tbl">
+  <tr><th>کارمند</th><th>تاریخ</th><th>ورود</th><th>خروج</th><th>مدت</th></tr>
+  {% for a in records %}<tr><td>{{ a.user.full_name }}</td><td>{{ a.check_in|jdate }}</td><td>{{ a.check_in|jtime }}</td>
+    <td>{{ a.check_out|jtime if a.check_out else '—' }}</td><td>{{ duration(a.check_in, a.check_out) }}</td></tr>
+  {% else %}<tr><td colspan="5" class="empty">رکوردی نیست.</td></tr>{% endfor %}
+</table></div></section>
+{% endblock %}
